@@ -1,0 +1,378 @@
+/* ✅ Google Fonts 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR:wght@400;700&family=Pretendard:wght@300;400;500;700&family=Jua&display=swap');
+
+/* ✅ 전체 페이지 기본 설정 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.head {
+    display: flex;
+    justify-content: space-between; /* 양쪽 사이드에 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-bottom: 135px;
+    padding: 0;
+}
+
+.head-container{
+    margin-bottom: 135px;
+}
+.restaurant-list{
+    margin-top: 50px;
+}
+header{
+    height: 100px;
+    border-bottom: 1px solid #ccc;
+    justify-content: space-between;
+    
+}
+
+header h1{
+    font-size: 36px;
+    margin-left: 15px   ;
+    font-family: "Nanum Myeongjo", serif; 
+}
+.head-container a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 색상 검은색 */
+}
+
+/* ✅ 네비게이션 바 스타일 */
+nav {
+    display: flex;
+    justify-content: flex-end; /* 메뉴를 오른쪽으로 정렬 */
+    align-items: center;
+    gap: 20px; /* 버튼 간격 */
+    padding: 20px 30px; /* 상단, 오른쪽 여백 추가 */
+}
+
+/* ✅ 네비게이션 바 내부 리스트 스타일 */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+}
+
+
+
+/* ✅ 네비게이션 바 버튼 스타일 */
+nav ul li a, .login-btn {
+    text-decoration: none;
+    background: #C1E5F5;
+    color: black;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 50px; /* 둥글게 */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav ul li a:hover, .login-btn:hover {
+    background: #A0D4E5;
+}
+
+/* ✅ 네비게이션 링크 스타일 (글자 크기 키움) */
+nav ul li a {
+    font-size: 18px;  /* 기존보다 살짝 키움 */
+    font-weight: bold; /* 글자 굵게 */
+    text-decoration: none;
+    color: black;
+    padding-bottom: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ 모달 기본 설정 (숨김 상태) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ :target을 사용해 모달이 보이도록 설정 */
+.modal:target {
+    display: flex;
+}
+.menu{
+    padding-bottom: 130px;
+}
+
+/* ✅ 로그인 창 스타일 */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* ✅ 입력 필드 크기 조정 */
+.modal-content input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ✅ 닫기 버튼 스타일 */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+/* ✅ 버튼 컨테이너 스타일 */
+.container {
+    width: 300px; 
+    justify-content: center;
+    margin-left: 12px;
+    /* 부모 요소의 너비를 설정 */
+}
+
+/* ✅ 로그인 및 멤버십 버튼 스타일 */
+.modal-login-btn{
+    background-color: #c3d9eb;
+    color: white; /* 글자색 하얀색 */
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px; /* 간격 추가 */
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px; /* 둥글게 */
+    cursor: pointer;
+    transition: background-color 0.3s; /* 부드러운 배경색 전환 */
+}
+
+.modal-login-btn {
+    margin-bottom: 10px; /* 로그인 버튼과 멤버십 버튼 간격 추가 */
+}
+
+.membership-btn {
+    color: black; /* 멤버십 버튼 글자색 검은색 */
+    font-weight: normal; /* 멤버십 버튼 글자 얇게 */
+}
+
+/* ✅ 버튼 호버 효과 */
+.modal-login-btn:hover, .membership-btn:hover {
+    background-color: #a9c7e0;
+}
+
+
+
+    /* ✅ 검색창을 중앙 정렬 */
+.search-wrapper {
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin-top: 20px; /* 상단 여백 조정 */
+}
+
+/* ✅ 검색창 스타일 */
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 60%; /* 검색창 길이 조정 */
+    max-width: 600px;
+    border: 2px solid #CCECFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* ✅ 검색 입력 필드 */
+.search-container input {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    outline: none;
+    font-size: 18pt; /* "is good"과 같은 크기 */
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    height: 100%;
+}
+
+/* ✅ 검색 버튼 */
+.search-container button {
+    background-color: #CCECFF;
+    border: none;
+    padding: 14px 22px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: black;
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; /* 버튼을 오른쪽으로 이동 */
+}
+.dropdown {
+    margin-right: 10px;
+}
+
+select {
+    padding: 10px;
+    margin-left: 50px;
+    font-size: 14pt;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px; /* 드롭다운 너비 조정 */
+}
+select:hover {
+    border-color: #888; /* 마우스 오버 시 테두리 색상 변경 */
+}
+
+option {
+    background-color: #fff; /* 옵션 배경색 */
+    color: #000; /* 옵션 글자색 */
+}
+
+.user-info {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    margin-right: 20px;
+}
+
+/* ✅ 로그아웃 버튼 스타일 */
+.logout-btn {
+    text-decoration: none;
+    background: #E57373; /* 빨간색 */
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 50px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #D32F2F; /* 더 진한 빨간색 */
+}
+
+.restaurant-list{
+    font-size: 23px;
+}
+.restaurant-list i{
+    font-size: 25px;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+    
+}
+
+.list-group-item {
+    background-color: rgba(205, 234, 247, 0.788);
+    border: 1px solid black;
+    padding: 15px;
+    border-radius: 15px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #abe6aea6;
+    border-color: #abe6aea6;
+}
+
+.list-group-link {
+    text-decoration: none;
+    color: #007bff;
+}
+.list-group h3{
+    color: black;
+}
+.list-group p{
+    color: black;
+}
+
+.Bookmark {
+    background-color: rgba(0, 0, 0, 0); /* 투명한 배경 */
+    font-size: 15px;
+    border: none;
+    border-radius: 50%; /* 원형 버튼 */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* 부드러운 애니메이션 */
+}
+
+.Bookmark:hover {
+    background-color: #ff9900; /* 호버 시 배경색 변화 */
+    transform: scale(1.1); /* 크기 확대 */
+}
+
+.Bookmark:active {
+    transform: scale(1); /* 클릭 시 크기 축소 */
+}
+
+/* 리뷰 버튼 스타일 */
+.review-button {
+    background-color: #007bff; /* 파란색 배경 */
+    color: white; /* 흰색 글자 */
+    padding: 10px 20px; /* 여백 */
+    font-size: 16px; /* 글자 크기 */
+    border: none; /* 테두리 없음 */
+    border-radius: 5px; /* 둥근 모서리 */
+    cursor: pointer; /* 마우스 커서 */
+    text-align: center; /* 글자 중앙 정렬 */
+    display: inline-block; /* 버튼처럼 보이게 */
+    transition: background-color 0.3s ease; /* 호버 시 배경색 변화 애니메이션 */
+    text-decoration: none; /* 링크 기본 스타일 제거 */
+}
+
+.review-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 어두워짐 */
+}
+
+.review-button:active {
+    background-color: #004085; /* 클릭 시 배경색 더 어두워짐 */
+}
+
+/* 버튼 링크 기본 스타일 없애기 */
+.review-btn {
+    text-decoration: none; /* 링크 기본 스타일 제거 */
+}

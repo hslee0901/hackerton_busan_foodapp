@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나야, 부산 맛집</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9ddb79e8a7aea897ca5300d15ec4d0bc"></script>
+</head>
+<body>
+
+
+    <div class="button-container">
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="해운대">
+
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/해운대.jpg') }}" alt="해운대">해운대
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="광안리">
+     
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/광안리.jpg') }}" alt="광안리">광안리
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="서면">
+       
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/서면.jpg') }}" alt="서면">서면
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="전포">
+        
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/전포.jpg') }}" alt="전포">전포
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="남포동">
+   
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/남포.jpg') }}" alt="남포">남포동
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="센텀">
+       
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/센텀.jpg') }}" alt="센텀">센텀
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="송정">
+       
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/송정.jpg') }}" alt="송정">송정
+            </button>
+        </form>
+        <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+            <input type="hidden" name="region" value="경성대">
+    
+            <button type="submit" class="region-btn">
+                <img src="{{ url_for('static', filename='images/경성대.jpg') }}" alt="경성대">경성대
+            </button>
+        </form>
+    </div>
+    
+
+<header>
+    <div class="head">
+    <div class="title-container">
+        <h1 class="title">나야, 부산 맛집</h1>
+        <p>
+            <span class="black-text">Busan</span> 
+            <span class="gray-text">is good</span> 
+            <span class="star-icons">⭐⭐⭐⭐⭐</span>
+        </p>
+    </div>
+    <div class="menu">
+    <nav>
+        {% if 'is_logged_in' in session %}
+            <span class="user-info">{{ session['user_name'] }}님 환영합니다!</span>
+            <a href="{{ url_for('list.show_favorites') }}" class="login-btn">맛집리스트</a>
+            <a href="{{ url_for('logout.logout') }}" class="logout-btn">LOGOUT</a>
+        {% else %}
+            <a href="#loginModal" class="login-btn">맛집리스트</a>  
+            <a href="#loginModal" class="login-btn">LOGIN</a>
+            
+        {% endif %}
+    </nav>
+    </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- ✅ 기존 검색창 -->
+    <form action="{{ url_for('search.search_places') }}" method="POST">
+        <div class="search-wrapper">
+            <div class="search-container">
+                <div class="dropdown">
+                <select name="region" required>
+                    <option value="">지역 선택</option>
+                    <option value="강서구">강서구</option>
+                    <option value="금정구">금정구</option>
+                    <option value="기장군">기장군</option>
+                    <option value="남구">남구</option>
+                    <option value="동구">동구</option>
+                    <option value="동래구">동래구</option>
+                    <option value="부산진구">부산진구</option>
+                    <option value="북구">북구</option>
+                    <option value="사상구">사상구</option>
+                    <option value="사하구">사하구</option>
+                    <option value="서구">서구</option>
+                    <option value="수영구">수영구</option>
+                    <option value="연제구">연제구</option>
+                    <option value="영도구">영도구</option>
+                    <option value="중구">중구</option>
+                    <option value="해운대구">해운대구</option>
+                </select>
+                </div>
+                <div class="dropdown">
+                <!-- 음식 종류 선택 -->
+                <select name="food_type" required>
+                    <option value="">음식 종류</option>
+                    <option value="불족발">한식</option>
+                    <option value="중식">중식</option>
+                    <option value="일식">일식</option>
+                    <option value="양식">양식</option>
+                    <option value="아시아음식">아시아음식</option>
+                    <option value="패스트푸드">패스트푸드</option>
+                    <option value="분식">분식</option>
+                    <option value="해산물">해산물</option>
+                    <option value="카페">카페/빵집</option>
+                </select>  
+                </div>         
+                <button type="submit">검색</button>
+            </div>
+        </div>
+    </form>
+    
+</main>
+
+<div class="background"></div>
+<!-- 로그인 모달 -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <a href="#" class="close-btn">&times;</a>
+        <h2>LOGIN</h2>
+        <form action="/login" method="POST">
+            <label for="ID">ID</label>
+            <input type="text" id="loginID" name="ID" placeholder="Enter your ID" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+
+            <div class="container">
+                <button type="submit" class="modal-login-btn">Login</button>
+                <button class="modal-login-btn" onclick="location.href='#membershipModal'">signup</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 멤버십 모달 -->
+<div id="membershipModal" class="modal">
+    <div class="modal-content">
+        <a href="#" class="close-btn">&times;</a>
+        <h2>SignUp</h2>
+        <form action="/signup" method="POST" id="signupForm">
+            <label for="username">User ID</label>
+            <input type="text" id="signupID" name="ID" placeholder="Enter your ID" required>
+            <span id="idFeedback" style="display: block; margin-top: 5px;"></span>
+
+            <label for="password">Password</label>
+            <input type="password" id="signupPassword" name="password" placeholder="Enter your password" required>
+
+            <label for="password_confirm">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="password_confirm" placeholder="Enter your password again" required>
+
+            <label for="NickName">NickName</label>
+            <input type="NickName" id="NickName" name="NickName" placeholder="Enter your NickName" required>
+
+
+            <div class="container">
+                <button type="submit" class="modal-login-btn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('#signupID').on('blur', function() {  
+        var id = $(this).val();  
+        console.log("Checking ID:", id);  // 입력값 확인
+        if (id) {
+            $.ajax({
+                url: '/check_id',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ ID: id }),  // 'ID' 필드명과 일치
+                success: function(response) {
+                    console.log("Response:", response);  // 응답 확인
+                    if (response.exists) {
+                        $('#idFeedback').text('이미 사용 중인 아이디입니다.').css('color', 'red');
+                    } else {
+                        $('#idFeedback').text('사용 가능한 아이디입니다.').css('color', 'green');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", xhr.responseText);  // 오류 메시지 출력
+                    $('#idFeedback').text('서버 오류가 발생했습니다.').css('color', 'red');
+                }
+            });
+        } else {
+            $('#idFeedback').text('');
+        }
+    });
+
+    // 비밀번호 확인
+    $('#signupForm').on('submit', function(event) {
+        var password = $('#signupPassword').val();
+        var confirmPassword = $('#confirmPassword').val();
+        if (password !== confirmPassword) {
+            event.preventDefault();
+            $('#passwordFeedback').text('비밀번호가 일치하지 않습니다.').css('color', 'red');
+        } else {
+            $('#passwordFeedback').text('');
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나야, 부산 맛집 검색 결과</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9ddb79e8a7aea897ca5300d15ec4d0bc"></script>
+    <script src="https://kit.fontawesome.com/f10167bfad.js"
+	crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    
+    <header>
+        <div class="head">
+        <div class="head-container">
+            <a href="{{ url_for('main.index') }}"><h1 class="title">나야, 부산 맛집</h1></a>
+        </div>
+        <div class="menu">
+        <nav>
+            {% if 'is_logged_in' in session %}
+                <span class="user-info"> 닉네임: {{ session['user_name'] }}</span>
+                <a href="{{ url_for('list.show_favorites') }}" class="login-btn">맛집리스트</a>
+                <a href="{{ url_for('logout.logout') }}" class="logout-btn">LOGOUT</a>
+            {% else %}
+                <a href="#loginModal" class="login-btn">맛집리스트</a>  
+                <a href="#loginModal" class="login-btn">LOGIN</a>
+            {% endif %}
+        </nav>
+        </div>
+        </div>
+    </header>
+    
+    <main>
+    <div class="food-page">
+
+        <form action="{{ url_for('search.search_places') }}" method="POST">
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <div class="input-wrapper">
+                     
+                        <input type="text" id="region" name="region" placeholder="지역 이름" required>
+                    </div>
+                    <div class="input-wrapper">
+        
+                        <input type="text" id="food_type" name="food_type" placeholder="음식 이름" required>
+                    </div>
+                    <button type="submit">검색</button>
+                </div>
+            </div>
+        </form>
+        
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <div class="map" id="map"></div>
+    {% endif %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("DOMContentLoaded 이벤트 실행됨");
+            
+                if (typeof kakao !== "undefined" && kakao.maps) {
+                    console.log("Kakao API가 정상적으로 로드됨");
+            
+                    var mapContainer = document.getElementById('map');
+                    var mapOption = {
+                        center: new kakao.maps.LatLng(35.1796, 129.0756), // 초기 중심 좌표
+                        level: 3  // 초기 확대 레벨
+                    };
+            
+                    var map = new kakao.maps.Map(mapContainer, mapOption);
+            
+                    var bounds = new kakao.maps.LatLngBounds();
+            
+                    var positions = JSON.parse('{{ results|tojson }}').map(place => {
+                        var latlng = new kakao.maps.LatLng(parseFloat(place.y), parseFloat(place.x));
+                        bounds.extend(latlng);
+                        return {
+                            title: place.place_name,
+                            latlng: latlng,
+                            url: place.place_url // url 필드 추가
+                        };
+                    });
+            
+                    var infowindow = new kakao.maps.InfoWindow(); // 전역 인포윈도우 생성
+            
+                    positions.forEach(position => {
+                        var markerImage = new kakao.maps.MarkerImage(
+                            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+                            new kakao.maps.Size(24, 35)
+                        );
+                        var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: position.latlng,
+                            title: position.title,
+                            image: markerImage
+                        });
+            
+                        // 각 마커에 이벤트 리스너 추가
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            var content = '<div><h4>' + position.title + '</h4><a href="' + position.url + '" target="_blank">상세보기</a></div>';
+                            infowindow.setContent(content);
+                            infowindow.open(map, marker);
+                        });
+                    });
+            
+                    // 지도 클릭 시 인포윈도우 닫기
+                    kakao.maps.event.addListener(map, 'click', function() {
+                        infowindow.close();
+                    });
+            
+                    map.setBounds(bounds);
+                } else {
+                    console.error("Kakao Maps API가 정상적으로 로드되지 않았습니다.");
+                }
+            });
+        </script>
+
+            <div class="title-container">
+                <h1>나야, 부산 맛집</h1>
+                <p> 근데 이제 {{ region }}
+                    {% if region.endswith('동') or region in ['서면', '연산', '하단', '사상', '기장', '기장군'] %}을{% else %}를{% endif %} 곁들인.</p>
+            </div>
+    
+            <div class="main-container">
+                <div class="content-container">
+                    <div class="left-container">
+                        <div class="region-buttons">
+                            <div class="leftsearch"><h2>지역으로 검색</h2></div>
+                            <div class="buttons-container">
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="해운대">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/해운대.jpg') }}" alt="해운대">해운대
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="광안리">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/광안리.jpg') }}" alt="광안리">광안리
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="남포">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/남포.jpg') }}" alt="남포">남포
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="서면">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/서면.jpg') }}" alt="서면">서면
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="동래">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/동래.jpg') }}" alt="동래">동래
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="연산">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/연산.jpg') }}" alt="연산">연산
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="기장">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/기장.jpg') }}" alt="기장">기장
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="구포">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/구포.jpg') }}" alt="구포">구포
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="사상">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/사상.jpg') }}" alt="사상">사상
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ url_for('search.search_places_btn') }}" method="POST">
+                                    <input type="hidden" name="region" value="하단">
+                                    <button type="submit" class="region-btn">
+                                        <img src="{{ url_for('static', filename='images/하단.jpg')}}"alt="하단">하단
+                                    </button>
+                                </form>
+                                <div class="back-button">
+                                    <a href="{{ url_for('main.index') }}">
+                                        <button><i class="fa-solid fa-house"></i></button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="restaurant">
+                        <h2>추천 맛집</h2>
+                        <div class="restaurant-list">
+                            {% if results %}
+                                <div class="list-group">
+                                    {% for place in results %}
+                                        <div class="list-group-item">
+                                            {% if 'is_logged_in' in session %}
+                                            <button class="Bookmark" onclick="addFavorite('{{ place.id }}', '{{ place.place_name }}', '{{ place.address_name }}', '{{ place.phone }}', '{{ place.place_url }}')"><i class="fa-regular fa-star" style="color: #e6bb1e;"></i></button><br>
+                                            <a href="{{ place.place_url }}" target="_blank" class="list-group-link">
+                                                <h3>상호명: {{ place.place_name }}</h3>
+                                                <p>주소: {{ place.address_name }} </p>
+                                                <p>전화번호: {{ place.phone if place.phone else "전화번호 없음" }}</p>
+                                            </a>
+                                            <a href="#ReviewModal" class="review-btn" onclick="openReviewModal('{{ place.id }}')">
+                                                <button class="review-button">리뷰</button>
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <a href="{{ place.place_url }}" target="_blank" class="list-group-link">
+                                            <h3>상호명: {{ place.place_name }}</h3>
+                                            <p>주소: {{ place.address_name }} </p>
+                                            <p>전화번호: {{ place.phone if place.phone else "전화번호 없음" }}</p>
+                                        </a>
+                                      </div>
+                  
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <script>
+                                    // 즐겨찾기 추가 함수 ajax
+                                    function addFavorite(placeId, placeName, address, phone, placeUrl) {
+                                        fetch("/add_favorite", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({
+                                                place_id: placeId,
+                                                place_name: placeName,
+                                                address: address,
+                                                phone: phone,
+                                                place_url: placeUrl
+                                            })
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                alert(data.message);
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error("Error:", error);
+                                        });
+                                    }
+                                </script>
+                               <!-- 페이지네이션 링크 추가 -->
+                               <div class="pagination">
+                                {% if page > 1 %}
+                                    <form action="{{ url_for('search.search_places') }}" method="post">
+                                        <input type="hidden" name="region" value="{{ request.form.region }}">
+                                        <input type="hidden" name="food_type" value="{{ request.form.food_type }}">
+                                        <input type="hidden" name="query" value="{{ request.form.query }}">
+                                        <input type="hidden" name="page" value="{{ page - 1 }}">
+                                        <button type="submit" class="submit-button">
+                                            <i class="fa-regular fa-circle-left"></i>
+                                            <i class="fa-solid fa-circle-left"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                <span>페이지 {{ page }}</span>
+                                {% if results|length >= results_per_page %}
+                                    <form action="{{ url_for('search.search_places') }}" method="post">
+                                        <input type="hidden" name="region" value="{{ request.form.region }}">
+                                        <input type="hidden" name="food_type" value="{{ request.form.food_type }}">
+                                        <input type="hidden" name="query" value="{{ request.form.query }}">
+                                        <input type="hidden" name="page" value="{{ page + 1 }}">
+                                       <button type="submit" class="submit-button">
+                                            <i class="fa-regular fa-circle-right"></i> 
+                                            <i class="fa-solid fa-circle-right"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <p>검색 결과가 없습니다.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                    
+    
+
+<div class="background"></div>
+<!-- 로그인 모달 -->
+<div id="loginModal" class="revmodal">
+    <div class="revmodal-content">
+        <a href="#" class="revclose-btn">&times;</a>
+        <h2>LOGIN</h2>
+        <form action="/login" method="POST">
+            <label for="ID">ID</label>
+            <input type="text" id="loginID" name="ID" placeholder="Enter your ID" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+
+            <div class="container">
+                <button type="submit" class="modal-login-btn">Login</button>
+                <button class="modal-login-btn" onclick="location.href='#membershipModal'">signup</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div id="ReviewModal" class="modal">    
+    <div class="modal-content">
+        <a href="#" class="close">&times;</a>
+
+
+        <!-- 리뷰 목록 -->
+        <div class="review-list">
+            <h2>리뷰 목록</h2>
+            <div class="review-box">
+                <div class="review-date">2025/01/25</div>
+                <div class="review-username">Username</div>
+                <div class="review-content">이 제품 정말 좋아요! 추천합니다.</div>
+            </div>
+            <div class="review-box">
+                <div class="review-date">2025/01/24</div>
+                <div class="review-username">AnotherUser</div>
+                <div class="review-content">가격 대비 만족합니다.</div>
+            </div>
+            <!-- 추가 리뷰 박스 -->
+        </div>
+
+<!-- 리뷰 작성 버튼 -->
+<a href="#WriteReviewModal" class="write-review-btn">
+    <button class="write-review-button">리뷰 작성</button>
+</a>
+</div>
+</div>
+
+<div id="WriteReviewModal" class="modal">
+    <div class="modal-content">
+        <a href="#" class="close">&times;</a>
+        <h2>리뷰 작성</h2>
+        <form id="reviewForm">
+            <textarea id="reviewContent" placeholder="리뷰를 입력하세요..." required></textarea>
+            <button type="submit" class="submit-review">제출</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('reviewForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 제출 방지
+    
+            let storeId = 1;  // 실제 store_id 값으로 변경 필요
+            let userId = "example_user";  // 로그인한 사용자 ID로 변경 필요
+            let content = document.getElementById('reviewContent').value.trim(); // textarea 값 가져오기
+    
+            if (!content) {
+                alert("리뷰를 입력해주세요.");
+                return;
+            }
+    
+            console.log("리뷰 데이터 전송 중...", storeId, userId, content); // 디버깅용
+    
+            fetch('/add_review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    store_id: storeId,
+                    id: userId,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("서버 응답:", data); // 서버 응답 확인
+                alert(data.message);
+                location.reload();  // 새로고침하여 리뷰 반영
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('리뷰 등록에 실패했습니다.');
+            });
+        });
+    });
+    </script>
+    
+    
+
+
+<!-- 멤버십 모달 -->
+<div id="membershipModal" class="revmodal">
+    <div class="revmodal-content">
+        <a href="#" class="revclose-btn">&times;</a>
+        <h2>SignUp</h2>
+        <form action="/signup" method="POST" id="signupForm">
+            <label for="username">User ID</label>
+            <input type="text" id="signupID" name="ID" placeholder="Enter your ID" required>
+            <span id="idFeedback" style="display: block; margin-top: 5px;"></span>
+
+            <label for="password">Password</label>
+            <input type="password" id="signupPassword" name="password" placeholder="Enter your password" required>
+
+            <label for="password_confirm">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="password_confirm" placeholder="Enter your password again" required>
+
+            <label for="NickName">NickName</label>
+            <input type="NickName" id="NickName" name="NickName" placeholder="Enter your NickName" required>
+
+
+            <div class="container">
+                <button type="submit" class="modal-login-btn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</main>
+
+<script>
+    $('#signupID').on('blur', function() {  
+        var id = $(this).val();  
+        console.log("Checking ID:", id);  // 입력값 확인
+        if (id) {
+            $.ajax({
+                url: '/check_id',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ ID: id }),  // 'ID' 필드명과 일치
+                success: function(response) {
+                    console.log("Response:", response);  // 응답 확인
+                    if (response.exists) {
+                        $('#idFeedback').text('이미 사용 중인 아이디입니다.').css('color', 'red');
+                    } else {
+                        $('#idFeedback').text('사용 가능한 아이디입니다.').css('color', 'green');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", xhr.responseText);  // 오류 메시지 출력
+                    $('#idFeedback').text('서버 오류가 발생했습니다.').css('color', 'red');
+                }
+            });
+        } else {
+            $('#idFeedback').text('');
+        }
+    });
+
+    // 비밀번호 확인
+    $('#signupForm').on('submit', function(event) {
+        var password = $('#signupPassword').val();
+        var confirmPassword = $('#confirmPassword').val();
+        if (password !== confirmPassword) {
+            event.preventDefault();
+            $('#passwordFeedback').text('비밀번호가 일치하지 않습니다.').css('color', 'red');
+        } else {
+            $('#passwordFeedback').text('');
+        }
+    });
+</script>
+
+
+
+
+
+</div>
+</body>
+</html>
+
+
+
+
+
+<!--  review 테이블
+CREATE TABLE reviews (
+    review_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    store_id INT NOT NULL,
+    id varchar(100) Not Null, 
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id) REFERENCES users(id)
+) 
+-->

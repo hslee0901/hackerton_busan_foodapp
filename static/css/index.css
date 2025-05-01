@@ -1,0 +1,357 @@
+/* ✅ Google Fonts 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR:wght@400;700&family=Pretendard:wght@300;400;500;700&family=Jua&display=swap');
+
+/* ✅ 전체 페이지 기본 설정 */
+body {
+    font-family: 'Jua', 'Noto Sans KR', 'Pretendard', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.head {
+    display: flex;
+    justify-content: space-between; /* 양쪽 사이드에 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-bottom: 135px;
+    padding: 0px;
+}
+
+
+/* ✅ 네비게이션 바 스타일 */
+nav {
+    display: flex;
+    justify-content: flex-end; /* 메뉴를 오른쪽으로 정렬 */
+    align-items: center;
+    gap: 20px; /* 버튼 간격 */
+    padding: 20px 30px; /* 상단, 오른쪽 여백 추가 */
+}
+
+/* ✅ 네비게이션 바 내부 리스트 스타일 */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+}
+
+.title-container p {
+    margin: 0;
+    padding-bottom: 90px;
+}
+
+/* ✅ 네비게이션 바 버튼 스타일 */
+nav ul li a, .login-btn {
+    text-decoration: none;
+    background: #C1E5F5;
+    color: black;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 50px; /* 둥글게 */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav ul li a:hover, .login-btn:hover {
+    background: #A0D4E5;
+}
+
+/* ✅ 네비게이션 링크 스타일 (글자 크기 키움) */
+nav ul li a {
+    font-size: 18px;  /* 기존보다 살짝 키움 */
+    font-weight: bold; /* 글자 굵게 */
+    text-decoration: none;
+    color: black;
+    padding-bottom: 30px;
+}
+
+/* ✅ 제목과 설명을 화면 왼쪽에 여백을 두고 정렬 */
+.title-container {
+    text-align: left;
+    margin-left: 35px;
+    margin-top: 15px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px; /* 🔹 제목과 설명 사이 간격 완전히 없앰 */
+}
+
+/* ✅ "Busan is good" 및 별점을 제목 바로 아래 배치 */
+.busan-container {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 🔹 텍스트와 별 아이콘 사이 간격 살짝 유지 */
+    margin-top: 5px; /* 🔹 제목과 너무 붙지 않도록 약간만 띄움 */
+}
+
+/* ✅ 제목(나야, 부산 맛집) 크기 */
+.title {
+    font-size: 42px;  
+    font-weight: bold;
+}
+
+/* ✅ "Busan" 텍스트 크기 */
+.black-text {
+    color: black;
+    font-weight: bold;
+    font-size: 28px; 
+}
+
+/* ✅ "is good" 텍스트 크기 */
+.gray-text {
+    color: gray;
+    font-weight: normal;
+    font-size: 24px;
+}
+
+/* ✅ 별 아이콘 크기 */
+.star-icons {
+    font-size: 26px;
+    color: gold;
+}
+
+/* ✅ 배경 이미지 */
+.background {
+    background-image: url("/static/images/busan.png");
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 500px;
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button-container button:hover{
+    background: #afe0f0c5;
+    border: #62b9d6;
+}
+.button-container button {
+    width: 330px; /* 한 줄에 4개 버튼을 배치하기 위해 너비를 22%로 설정 */
+    height: 70px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: white;
+    border: 2px solid #D9D9D9;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px;
+    font-size: 23px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.button-container button img {
+    margin-left: 10px;
+    width: 70px;  /* 이미지 크기 조정 */
+    margin-right: 8px;
+    border-radius: 5px;
+}
+
+.button-container button span {
+    flex-grow: 1;
+    text-align: right;
+}
+
+
+/* ✅ 모달 기본 설정 (숨김 상태) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ :target을 사용해 모달이 보이도록 설정 */
+.modal:target {
+    display: flex;
+}
+.menu{
+    padding-bottom: 130px;
+}
+
+/* ✅ 로그인 창 스타일 */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* ✅ 입력 필드 크기 조정 */
+.modal-content input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ✅ 닫기 버튼 스타일 */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+/* ✅ 버튼 컨테이너 스타일 */
+.container {
+    width: 300px; 
+    justify-content: center;
+    margin-left: 12px;
+    /* 부모 요소의 너비를 설정 */
+}
+
+/* ✅ 로그인 및 멤버십 버튼 스타일 */
+.modal-login-btn{
+    background-color: #c3d9eb;
+    color: white; /* 글자색 하얀색 */
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px; /* 간격 추가 */
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px; /* 둥글게 */
+    cursor: pointer;
+    transition: background-color 0.3s; /* 부드러운 배경색 전환 */
+}
+
+.modal-login-btn {
+    margin-bottom: 10px; /* 로그인 버튼과 멤버십 버튼 간격 추가 */
+}
+
+.membership-btn {
+    color: black; /* 멤버십 버튼 글자색 검은색 */
+    font-weight: normal; /* 멤버십 버튼 글자 얇게 */
+}
+
+/* ✅ 버튼 호버 효과 */
+.modal-login-btn:hover, .membership-btn:hover {
+    background-color: #a9c7e0;
+}
+
+
+
+    /* ✅ 검색창을 중앙 정렬 */
+.search-wrapper {
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin-top: 20px; /* 상단 여백 조정 */
+}
+
+/* ✅ 검색창 스타일 */
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 60%; /* 검색창 길이 조정 */
+    max-width: 600px;
+    border: 2px solid #CCECFF;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* ✅ 검색 입력 필드 */
+.search-container input {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    outline: none;
+    font-size: 18pt; /* "is good"과 같은 크기 */
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    height: 100%;
+}
+
+/* ✅ 검색 버튼 */
+.search-container button {
+    background-color: #CCECFF;
+    border: none;
+    padding: 14px 22px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: black;
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; /* 버튼을 오른쪽으로 이동 */
+}
+.dropdown {
+    margin-right: 10px;
+}
+
+select {
+    padding: 10px;
+    margin-left: 50px;
+    font-size: 14pt;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px; /* 드롭다운 너비 조정 */
+}
+select:hover {
+    border-color: #888; /* 마우스 오버 시 테두리 색상 변경 */
+}
+
+option {
+    background-color: #fff; /* 옵션 배경색 */
+    color: #000; /* 옵션 글자색 */
+}
+
+.user-info {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    margin-right: 20px;
+}
+
+/* ✅ 로그아웃 버튼 스타일 */
+.logout-btn {
+    text-decoration: none;
+    background: #E57373; /* 빨간색 */
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 50px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #D32F2F; /* 더 진한 빨간색 */
+}

@@ -7,7 +7,7 @@ import urllib.parse  # 한글 오류 해결
 search_bp = Blueprint('search', __name__)
 
 # 카카오 API 키 설정
-KAKAO_API_KEY = "85e8f0bca57b85de47ebd455a73ae806"
+KAKAO_API_KEY = "API KEY"
 
 # 📌 1. 카카오 지역 검색 API 호출 (맛집 검색)
 @search_bp.route("/search", methods=["POST", "GET"])
